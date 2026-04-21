@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Savings Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+        h2 { text-align: center; }
+        p.instructions { text-align: center; color: #555; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        .item-col { text-align: left; font-weight: bold; }
+        input { width: 80px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; background-color: #e6f2ff; }
+        .saving-cell { background-color: #00b050; color: white; font-weight: bold; }
+        .downtime-row { font-weight: bold; background-color: #f9f9f9; }
+        .downtime-val { border: none; background: transparent; }
+        .final-savings-container { margin-top: 30px; text-align: center; }
+        .final-savings-box { background-color: #00b050; color: white; font-size: 32px; font-weight: bold; padding: 20px; border-radius: 8px; display: inline-block; min-width: 250px;}
+        
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            th, td { padding: 8px 4px; font-size: 14px; }
+            input { width: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Customer Savings Calculator</h2>
+    <p class="instructions">Instructions - Fill Blue Cells only | GREEN = CUSTOMER SAVINGS</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="item-col">Item</th>
+                <th>Current</th>
+                <th>SLS Solution</th>
+                <th>Total Saving</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="item-col">Failures (Yearly)</td>
+                <td><input type="number" id="c_fail" value="5" oninput="calculate()"></td>
+                <td><input type="number" id="s_fail" value="4" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_fail">1</td>
+            </tr>
+            <tr>
+                <td class="item-col">Hours Per Failure</td>
+                <td><input type="number" id="c_hours" value="5" oninput="calculate()"></td>
+                <td><input type="number" id="s_hours" value="5" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_hours">0</td>
+            </tr>
+            <tr>
+                <td class="item-col">Cost/hour (RM)</td>
+                <td><input type="number" id="c_costhr" value="5000" oninput="calculate()"></td>
+                <td><input type="number" id="s_costhr" value="5000" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_costhr">RM0</td>
+            </tr>
+            <tr>
+                <td class="item-col">Item Cost (RM)</td>
+                <td><input type="number" id="c_item" value="4000" oninput="calculate()"></td>
+                <td><input type="number" id="s_item" value="12000" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_item">-RM8,000</td>
+            </tr>
+            <tr class="downtime-row">
+                <td class="item-col">Downtime Cost</td>
+                <td id="c_down">RM129,000</td>
+                <td id="s_down">RM112,000</td>
+                <td class="saving-cell" id="t_down">RM17,000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="final-savings-container">
+        <h2>Your Savings</h2>
+        <div class="final-savings-box" id="final_savings">RM17,000</div>
+    </div>
+
+    <script>
+        function formatRM(num) {
+            return "RM" + num.toLocaleString('en-MY', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function calculate() {
+            // Get input values (default to 0 if empty)
+            let c_fail = parseFloat(document.getElementById('c_fail').value) || 0;
+            let c_hours = parseFloat(document.getElementById('c_hours').value) || 0;
+            let c_costhr = parseFloat(document.getElementById('c_costhr').value) || 0;
+            let c_item = parseFloat(document.getElementById('c_item').value) || 0;
+
+            let s_fail = parseFloat(document.getElementById('s_fail').value) || 0;
+            let s_hours = parseFloat(document.getElementById('s_hours').value) || 0;
+            let s_costhr = parseFloat(document.getElementById('s_costhr').value) || 0;
+            let s_item = parseFloat(document.getElementById('s_item').value) || 0;
+
+            // Calculate basic savings
+            document.getElementById('t_fail').innerText = c_fail - s_fail;
+            document.getElementById('t_hours').innerText = c_hours - s_hours;
+            document.getElementById('t_costhr').innerText = formatRM(c_costhr - s_costhr);
+            document.getElementById('t_item').innerText = formatRM(c_item - s_item);
+
+            // Calculate Downtime Costs: (Failures * Hours * Cost/hour) + Item Cost
+            let c_down = (c_fail * c_hours * c_costhr) + c_item;
+            let s_down = (s_fail * s_hours * s_costhr) + s_item;
+
+            document.getElementById('c_down').innerText = formatRM(c_down);
+            document.getElementById('s_down').innerText = formatRM(s_down);
+
+            // Calculate Total Downtime Savings
+            let total_savings = c_down - s_down;
+            document.getElementById('t_down').innerText = formatRM(total_savings);
+            document.getElementById('final_savings').innerText = formatRM(total_savings);
+        }
+
+        // Run calculation once on load to populate defaults
+        window.onload = calculate;
+    </script>
+</body>
+</html>
