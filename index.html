@@ -43,14 +43,14 @@
         <tbody>
             <tr>
                 <td class="item-col">Failures (Yearly)</td>
-                <td><input type="number" id="c_fail" value="5" oninput="calculate()"></td>
-                <td><input type="number" id="s_fail" value="4" oninput="calculate()"></td>
-                <td class="saving-cell" id="t_fail">1</td>
+                <td><input type="number" id="c_fail" value="" placeholder="0" oninput="calculate()"></td>
+                <td><input type="number" id="s_fail" value="" placeholder="0" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_fail">0</td>
             </tr>
             <tr>
                 <td class="item-col">Hours Per Failure</td>
-                <td><input type="number" id="c_hours" value="5" oninput="calculate()"></td>
-                <td><input type="number" id="s_hours" value="5" oninput="calculate()"></td>
+                <td><input type="number" id="c_hours" value="" placeholder="0" oninput="calculate()"></td>
+                <td><input type="number" id="s_hours" value="" placeholder="0" oninput="calculate()"></td>
                 <td class="saving-cell" id="t_hours">0</td>
             </tr>
             <tr>
@@ -61,22 +61,22 @@
             </tr>
             <tr>
                 <td class="item-col">Item Cost (RM)</td>
-                <td><input type="number" id="c_item" value="4000" oninput="calculate()"></td>
-                <td><input type="number" id="s_item" value="12000" oninput="calculate()"></td>
-                <td class="saving-cell" id="t_item">-RM8,000</td>
+                <td><input type="number" id="c_item" value="" placeholder="0" oninput="calculate()"></td>
+                <td><input type="number" id="s_item" value="" placeholder="0" oninput="calculate()"></td>
+                <td class="saving-cell" id="t_item">RM0</td>
             </tr>
             <tr class="downtime-row">
                 <td class="item-col">Downtime Cost</td>
-                <td id="c_down">RM129,000</td>
-                <td id="s_down">RM112,000</td>
-                <td class="saving-cell" id="t_down">RM17,000</td>
+                <td id="c_down">RM0</td>
+                <td id="s_down">RM0</td>
+                <td class="saving-cell" id="t_down">RM0</td>
             </tr>
         </tbody>
     </table>
 
     <div class="final-savings-container">
         <h2>Your Savings</h2>
-        <div class="final-savings-box" id="final_savings">RM17,000</div>
+        <div class="final-savings-box" id="final_savings">RM0</div>
     </div>
 
     <script>
@@ -102,9 +102,9 @@
             document.getElementById('t_costhr').innerText = formatRM(c_costhr - s_costhr);
             document.getElementById('t_item').innerText = formatRM(c_item - s_item);
 
-            // Calculate Downtime Costs: (Failures * Hours * Cost/hour) + Item Cost
-            let c_down = (c_fail * c_hours * c_costhr) + c_item;
-            let s_down = (s_fail * s_hours * s_costhr) + s_item;
+            // Calculate Downtime Costs: (Failures * Hours * Cost/hour) + (Failures * Item Cost)
+            let c_down = (c_fail * c_hours * c_costhr) + (c_fail * c_item);
+            let s_down = (s_fail * s_hours * s_costhr) + (s_fail * s_item);
 
             document.getElementById('c_down').innerText = formatRM(c_down);
             document.getElementById('s_down').innerText = formatRM(s_down);
